@@ -2,17 +2,19 @@ package main;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import main.customs.CustomMedication;
+import main.customs.CustomMedicationStatement;
+import main.customs.CustomObservation;
 import main.customs.CustomPatient;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Parameters;
-import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.r4.model.IdType;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FhirServer {
     private FhirContext ctx;
-    private static final String serverBase = "http://hapi.fhir.org/baseDstu3";
+    private final String serverBase = "http://hapi.fhir.org/baseDstu3";
     private IGenericClient client;
 
     public FhirServer(){
@@ -20,14 +22,19 @@ public class FhirServer {
         client = ctx.newRestfulGenericClient(serverBase);
     }
 
-    public List<Bundle.BundleEntryComponent> getAllName(){
+    public List<CustomPatient> getPatients(){
         Bundle allPatient = client
                 .search()
                 .forResource(Patient.class)
                 .returnBundle(Bundle.class)
                 .execute();
 
-        return allPatient.getEntry();
+        ArrayList<CustomPatient> patientList = new ArrayList<>();
+        for (Bundle.BundleEntryComponent patient : allPatient.getEntry()) {
+            patientList.add(new CustomPatient(patient));
+        }
+
+        return patientList;
     }
 
     public List<Bundle.BundleEntryComponent> getEverything(String patientID){
@@ -54,19 +61,40 @@ public class FhirServer {
         return entries;
     }
 
-    public ArrayList<CustomPatient> castToCustomPatient(List<Bundle.BundleEntryComponent> patients){
-        ArrayList<CustomPatient> patientArrayList = new ArrayList<>();
-        for (Bundle.BundleEntryComponent patient : patients) {
-            patientArrayList.add(new CustomPatient(patient));
+    public List<CustomMedication> getMedications(List<Bundle.BundleEntryComponent> entries){
+        List<CustomMedication> medicationList = new ArrayList<>();
+        for (Bundle.BundleEntryComponent e : entries) {
+            if(e.getResource() instanceof Medication) {
+                Medication m = (Medication)e.getResource();
+                medicationList.add(new CustomMedication(m));
+            }
         }
-        return patientArrayList;
+
+        return medicationList;
     }
 
-    public FhirContext getCtx() {
-        return ctx;
+    public List<CustomMedicationStatement> getMedicationStatements(List<Bundle.BundleEntryComponent> entries){
+        List<CustomMedicationStatement> medicationStatementList = new ArrayList<>();
+        for (Bundle.BundleEntryComponent e : entries) {
+            if(e.getResource() instanceof MedicationStatement) {
+                MedicationStatement m = (MedicationStatement)e.getResource();
+                medicationStatementList.add(new CustomMedicationStatement(m));
+            }
+        }
+
+        return medicationStatementList;
     }
 
-    public IGenericClient getClient() {
-        return client;
+    public List<CustomObservation> getObservations(List<Bundle.BundleEntryComponent> entries)  {
+        List<CustomObservation> observationList = new ArrayList<>();
+        for (Bundle.BundleEntryComponent e : entries) {
+            if(e.getResource() instanceof Observation) {
+                Observation o = (Observation)e.getResource();
+                observationList.add(new CustomObservation(o));
+            }
+        }
+
+        return observationList;
     }
+
 }

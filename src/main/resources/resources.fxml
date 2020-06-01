@@ -26,15 +26,13 @@
             <Insets right="60"/>
         </GridPane.margin>
         </Label>
-<!--        <TextField GridPane.columnIndex="2" prefHeight="25.0" prefWidth="150.0" promptText="Search..." />-->
-<!--        <ComboBox GridPane.columnIndex="3" promptText="Search in" />-->
-<!--        <Button GridPane.columnIndex="4" mnemonicParsing="false" text="Search" />-->
         <ComboBox fx:id="resourceComboBox"
                   GridPane.columnIndex="2"
                   promptText="Resource"
         />
 
     </GridPane>
-    <TableView VBox.vgrow="ALWAYS">
+    <TableView fx:id="tableView"
+            VBox.vgrow="ALWAYS">
     </TableView>
 </VBox>

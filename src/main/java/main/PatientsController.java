@@ -12,15 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import main.customs.CustomPatient;
-import org.hl7.fhir.dstu3.model.Bundle;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
 
 
 public class PatientsController implements Initializable {
@@ -32,13 +29,12 @@ public class PatientsController implements Initializable {
     @FXML TableColumn<CustomPatient, String> birthColumn;
     @FXML TableColumn<CustomPatient, String> genderColumn;
     private FhirServer server;
-    private ArrayList<CustomPatient> patientList;
+    private List<CustomPatient> patientList;
 
 
     public PatientsController() {
         server = new FhirServer();
-        List<Bundle.BundleEntryComponent> bundle = server.getAllName();
-        patientList = server.castToCustomPatient(bundle);
+        patientList = server.getPatients();
     }
 
     @Override
@@ -53,7 +49,6 @@ public class PatientsController implements Initializable {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     CustomPatient rowData = row.getItem();
-                    System.out.println(rowData.getId());
                     loadResourcesScene((Stage) tv.getScene().getWindow(), rowData, tv.getScene());
                 }
             });
@@ -77,7 +72,7 @@ public class PatientsController implements Initializable {
     private void loadResourcesScene(Stage window, CustomPatient patient, Scene patientScene) {
         try {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader().getResource("resources.fxml")));
-            loader.setController(new ResourcesController(patient, patientScene));
+            loader.setController(new ResourcesController(patient, patientScene, server));
             Parent root = loader.load();
             window.setScene(new Scene(root, 700, 500));
             window.show();
