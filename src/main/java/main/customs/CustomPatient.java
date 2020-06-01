@@ -1,10 +1,13 @@
-package main;
+package main.customs;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.dstu2.resource.*;
+
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Patient;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class CustomPatient {
     private String firstName;
@@ -18,16 +21,18 @@ public class CustomPatient {
 
     }
 
-    public CustomPatient(Bundle.Entry p) {
+    public CustomPatient(Bundle.BundleEntryComponent p) {
         Patient patient = (Patient) p.getResource();
-        this.id = p.getFullUrl().split("/")[p.getFullUrl().split("/").length - 1];
-        this.firstName = patient.getName().isEmpty() ? "none" : patient.getName().get(0).getGivenAsSingleString();
-        this.lastName = patient.getName().isEmpty() ? "none" : patient.getName().get(0).getFamilyAsSingleString();
-        this.gender = patient.getGender() == null ? "nogender" : patient.getGender();
-        this.birthDate = patient.getBirthDate();
-
-        SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
-        this.birthDateString = patient.getBirthDate() == null ? "none" : dt.format(patient.getBirthDate());
+        List<String> urlList = Arrays.asList(p.getFullUrl().split("/"));
+        this.id = urlList.get(urlList.size() - 1);
+        this.firstName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getGivenAsSingleString();
+        this.lastName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getFamily();
+        this.gender = patient.getGender() != null ? patient.getGender().getDisplay() : "";
+        if (patient.getBirthDate() != null) {
+            this.birthDate = patient.getBirthDate();
+            SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
+            this.birthDateString = dt.format(patient.getBirthDate());
+        }
     }
 
     public String getFirstName() {

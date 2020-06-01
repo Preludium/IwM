@@ -1,26 +1,27 @@
 package main;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.dstu2.resource.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import main.customs.CustomPatient;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Parameters;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.r4.model.IdType;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class FhirServer {
     private FhirContext ctx;
-    private static final String serverBase = "http://hapi.fhir.org/baseDstu2";
+    private static final String serverBase = "http://hapi.fhir.org/baseDstu3";
     private IGenericClient client;
 
     public FhirServer(){
-        ctx = FhirContext.forDstu2();
+        ctx = FhirContext.forDstu3();
         client = ctx.newRestfulGenericClient(serverBase);
     }
 
-    public List<Bundle.Entry> getAllName(){
-        Bundle allPatient = this.getClient()
+    public List<Bundle.BundleEntryComponent> getAllName(){
+        Bundle allPatient = client
                 .search()
                 .forResource(Patient.class)
                 .returnBundle(Bundle.class)
@@ -29,7 +30,7 @@ public class FhirServer {
         return allPatient.getEntry();
     }
 
-    public List<Bundle.Entry> getEverything(String patientID){
+    public List<Bundle.BundleEntryComponent> getEverything(String patientID){
         Parameters outParams = client
                 .operation()
                 .onInstance(new IdType("Patient", patientID))
@@ -38,14 +39,13 @@ public class FhirServer {
                 .useHttpGet()
                 .execute();
 
-        List<Bundle.Entry> entries = new LinkedList<>();
-        List<Parameters.Parameter> parameters = outParams.getParameter();
+        List<Bundle.BundleEntryComponent> entries = new ArrayList<>();
+        List<Parameters.ParametersParameterComponent> parameters = outParams.getParameter();
 
-        for (Parameters.Parameter parameter : parameters) {
+        for (Parameters.ParametersParameterComponent parameter : parameters) {
             Bundle bundle = (Bundle) parameter.getResource();
             entries.addAll(bundle.getEntry());
             while (bundle.getLink(Bundle.LINK_NEXT) != null) {
-                // load next page
                 bundle = client.loadPage().next(bundle).execute();
                 entries.addAll(bundle.getEntry());
             }
@@ -54,9 +54,9 @@ public class FhirServer {
         return entries;
     }
 
-    public ArrayList<CustomPatient> castToCustomPatient(List<Bundle.Entry> patients){
+    public ArrayList<CustomPatient> castToCustomPatient(List<Bundle.BundleEntryComponent> patients){
         ArrayList<CustomPatient> patientArrayList = new ArrayList<>();
-        for (Bundle.Entry patient : patients) {
+        for (Bundle.BundleEntryComponent patient : patients) {
             patientArrayList.add(new CustomPatient(patient));
         }
         return patientArrayList;

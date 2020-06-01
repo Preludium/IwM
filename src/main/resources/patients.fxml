@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/10.0.2-internal"
+      fx:controller="main.PatientsController"
+>
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+    <HBox alignment="BOTTOM_RIGHT" spacing="8" GridPane.rowIndex="0">
+        <padding>
+            <Insets bottom="10" top="25" />
+        </padding>
+        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="150.0" promptText="Search..." />
+    </HBox>
+    <TableView VBox.vgrow="ALWAYS" fx:id="tableView">
+      <columns>
+         <TableColumn fx:id="idColumn" minWidth="125.0" text="ID" />
+         <TableColumn fx:id="firstNameColumn" minWidth="125.0" text="First Name" />
+         <TableColumn fx:id="lastNameColumn" minWidth="125.0" text="Last Name" />
+         <TableColumn fx:id="birthColumn" minWidth="125.0" text="Date of birth" />
+         <TableColumn fx:id="genderColumn" minWidth="125.0" text="Gender" />
+      </columns>
+    </TableView>
+</VBox>
