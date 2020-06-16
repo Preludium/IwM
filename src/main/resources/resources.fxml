@@ -26,6 +26,7 @@
             <Insets right="60"/>
         </GridPane.margin>
         </Label>
+<!--        <DatePicker/>-->
         <ComboBox fx:id="resourceComboBox"
                   GridPane.columnIndex="2"
                   promptText="Resource"

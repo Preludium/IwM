@@ -17,7 +17,7 @@ public class CustomMedicationStatement {
 
 
     public CustomMedicationStatement(MedicationStatement ms)  {
-        try{
+        try {
             this.name = ms.getMedicationCodeableConcept().getCodingFirstRep().getDisplay();
             this.taken =  ms.getTaken().getDisplay();
             this.dosage=  ms.getDosageFirstRep().getDoseSimpleQuantity().getValue().toString() + ms.getDosageFirstRep().getDoseSimpleQuantity().getUnit();
@@ -26,9 +26,36 @@ public class CustomMedicationStatement {
             this.startDateString = dt.format(this.startDate);
             this.endDate =  ms.getEffectivePeriod().getEnd();
             this.endDateString = dt.format(this.endDate);
-
-        } catch (FHIRException e) {
-            e.printStackTrace();
         }
+        catch (Exception e) {
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTaken() {
+        return taken;
+    }
+
+    public String getDosage() {
+        return dosage;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public String getStartDateString() {
+        return startDateString;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public String getEndDateString() {
+        return endDateString;
     }
 }

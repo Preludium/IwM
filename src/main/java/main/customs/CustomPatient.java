@@ -22,16 +22,20 @@ public class CustomPatient {
     }
 
     public CustomPatient(Bundle.BundleEntryComponent p) {
-        Patient patient = (Patient) p.getResource();
-        List<String> urlList = Arrays.asList(p.getFullUrl().split("/"));
-        this.id = urlList.get(urlList.size() - 1);
-        this.firstName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getGivenAsSingleString();
-        this.lastName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getFamily();
-        this.gender = patient.getGender() != null ? patient.getGender().getDisplay() : "";
-        if (patient.getBirthDate() != null) {
-            this.birthDate = patient.getBirthDate();
-            SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
-            this.birthDateString = dt.format(patient.getBirthDate());
+        try {
+            Patient patient = (Patient) p.getResource();
+            List<String> urlList = Arrays.asList(p.getFullUrl().split("/"));
+            this.id = urlList.get(urlList.size() - 1);
+            this.firstName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getGivenAsSingleString();
+            this.lastName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getFamily();
+            this.gender = patient.getGender() != null ? patient.getGender().getDisplay() : "";
+            if (patient.getBirthDate() != null) {
+                this.birthDate = patient.getBirthDate();
+                SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
+                this.birthDateString = dt.format(patient.getBirthDate());
+            }
+        }
+        catch (Exception e) {
         }
     }
 

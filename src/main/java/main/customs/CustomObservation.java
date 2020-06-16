@@ -14,16 +14,33 @@ public class CustomObservation {
 
 
     public CustomObservation(Observation o) {
-        try{
+        try {
             name = o.getCode().getText();
             startDate = o.getIssued();
-            SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-            startDateString = dt.format(this.startDate);
+            if (startDate != null) {
+                SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+                startDateString = dt.format(this.startDate);
+            }
             if (o.hasValueQuantity())
                 measure = String.format("%.2f ", o.getValueQuantity().getValue()) + o.getValueQuantity().getUnit();
         }
-        catch (FHIRException e){
-            e.printStackTrace();
+        catch (Exception e) {
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public String getStartDateString() {
+        return startDateString;
+    }
+
+    public String getMeasure() {
+        return measure;
     }
 }

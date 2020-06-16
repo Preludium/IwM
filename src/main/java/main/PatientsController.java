@@ -28,8 +28,8 @@ public class PatientsController implements Initializable {
     @FXML TableColumn<CustomPatient, String> lastNameColumn;
     @FXML TableColumn<CustomPatient, String> birthColumn;
     @FXML TableColumn<CustomPatient, String> genderColumn;
-    private FhirServer server;
-    private List<CustomPatient> patientList;
+    private final FhirServer server;
+    private final List<CustomPatient> patientList;
 
 
     public PatientsController() {
@@ -39,11 +39,8 @@ public class PatientsController implements Initializable {
 
     @Override
     public void initialize(URL location, final ResourceBundle resources) {
-
-        ObservableList<CustomPatient> patients = FXCollections.observableArrayList(patientList);
         setUpTableView();
-
-        tableView.setItems(patients);
+        tableView.setItems(FXCollections.observableArrayList(patientList));
         tableView.setRowFactory(tv -> {
             final TableRow<CustomPatient> row = new TableRow<>();
             row.setOnMouseClicked(event -> {

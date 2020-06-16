@@ -10,9 +10,29 @@ public class CustomMedication {
     private String description;
 
     public CustomMedication(Medication m) {
-        name = m.getCode().getText();
-        code = m.getCode().getCodingFirstRep().getCode();
-        manufacturer = m.getManufacturer().getDisplay();
-        description = m.getCode().getCoding().get(1).getDisplay();
+        try {
+            name = m.getCode().getText();
+            code = m.getCode().getCodingFirstRep().getCode();
+            manufacturer = m.getManufacturer().getDisplay();
+            description = m.getCode().getCoding().get(1).getDisplay();
+        }
+        catch (Exception e) {
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

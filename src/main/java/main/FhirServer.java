@@ -2,10 +2,7 @@ package main;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import main.customs.CustomMedication;
-import main.customs.CustomMedicationStatement;
-import main.customs.CustomObservation;
-import main.customs.CustomPatient;
+import main.customs.*;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.r4.model.IdType;
 
@@ -13,12 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FhirServer {
-    private FhirContext ctx;
-    private final String serverBase = "http://hapi.fhir.org/baseDstu3";
-    private IGenericClient client;
+    private final IGenericClient client;
 
     public FhirServer(){
-        ctx = FhirContext.forDstu3();
+        FhirContext ctx = FhirContext.forDstu3();
+        String serverBase = "http://localhost:8080/baseDstu3";
         client = ctx.newRestfulGenericClient(serverBase);
     }
 
@@ -30,9 +26,8 @@ public class FhirServer {
                 .execute();
 
         ArrayList<CustomPatient> patientList = new ArrayList<>();
-        for (Bundle.BundleEntryComponent patient : allPatient.getEntry()) {
+        for (Bundle.BundleEntryComponent patient : allPatient.getEntry())
             patientList.add(new CustomPatient(patient));
-        }
 
         return patientList;
     }
@@ -97,4 +92,15 @@ public class FhirServer {
         return observationList;
     }
 
+    public List<CustomMedicationRequest> getMedicationRequest(List<Bundle.BundleEntryComponent> entries) {
+        List<CustomMedicationRequest> medicationRequestList = new ArrayList<>();
+        for (Bundle.BundleEntryComponent e : entries) {
+            if (e.getResource() instanceof MedicationRequest) {
+                MedicationRequest mr = ((MedicationRequest) e.getResource());
+                CustomMedicationRequest mmr = new CustomMedicationRequest(mr);
+                medicationRequestList.add(mmr);
+            }
+        }
+        return medicationRequestList;
+    }
 }
