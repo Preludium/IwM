@@ -1,7 +1,6 @@
 package main.customs;
 
 import org.hl7.fhir.dstu3.model.MedicationRequest;
-import org.hl7.fhir.dstu3.model.Range;
 
 public class CustomMedicationRequest {
 

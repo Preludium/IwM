@@ -2,6 +2,7 @@ package main;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import main.customs.*;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.r4.model.IdType;
@@ -15,6 +16,8 @@ public class FhirServer {
     public FhirServer(){
         FhirContext ctx = FhirContext.forDstu3();
         String serverBase = "http://localhost:8080/baseDstu3";
+//        String serverBase = "http://hapi.fhir.org/baseDstu3";
+
         client = ctx.newRestfulGenericClient(serverBase);
     }
 
@@ -56,7 +59,7 @@ public class FhirServer {
         return entries;
     }
 
-    public List<CustomMedication> getMedications(List<Bundle.BundleEntryComponent> entries){
+    public List<CustomMedication> getMedicationss(List<Bundle.BundleEntryComponent> entries){
         List<CustomMedication> medicationList = new ArrayList<>();
         for (Bundle.BundleEntryComponent e : entries) {
             if(e.getResource() instanceof Medication) {
@@ -92,15 +95,47 @@ public class FhirServer {
         return observationList;
     }
 
-    public List<CustomMedicationRequest> getMedicationRequest(List<Bundle.BundleEntryComponent> entries) {
-        List<CustomMedicationRequest> medicationRequestList = new ArrayList<>();
+    public List<MedicationRequest> getMedicationRequest(List<Bundle.BundleEntryComponent> entries) {
+        List<MedicationRequest> medicationRequestList = new ArrayList<>();
         for (Bundle.BundleEntryComponent e : entries) {
             if (e.getResource() instanceof MedicationRequest) {
                 MedicationRequest mr = ((MedicationRequest) e.getResource());
-                CustomMedicationRequest mmr = new CustomMedicationRequest(mr);
-                medicationRequestList.add(mmr);
+                medicationRequestList.add(mr);
             }
         }
         return medicationRequestList;
+    }
+
+    public List<CustomMedicationRequest> getCustomMedicationRequest(List<MedicationRequest> reqs) {
+        List<CustomMedicationRequest> medicationRequestList = new ArrayList<>();
+        for (MedicationRequest req : reqs) {
+            CustomMedicationRequest mmr = new CustomMedicationRequest(req);
+            medicationRequestList.add(mmr);
+        }
+        return medicationRequestList;
+    }
+
+    public List<CustomMedication> getMedications(List<MedicationRequest> medReqs) {
+        List<CustomMedication> medicationList = new ArrayList<>();
+
+        for(MedicationRequest req : medReqs){
+            if (req.getMedication() instanceof CodeableConcept) {
+                CodeableConcept medicationCodeable = ((CodeableConcept) req.getMedication());
+                String code = medicationCodeable.getCodingFirstRep().getCode();
+                Bundle results = client
+                        .search()
+                        .forResource(Medication.class)
+                        .where(new TokenClientParam("form").exactly().code(code))
+                        .returnBundle(Bundle.class)
+                        .execute();
+                for (Bundle.BundleEntryComponent e : results.getEntry()) {
+                    if(e.getResource() instanceof Medication) {
+                        Medication m = (Medication) e.getResource();
+                        medicationList.add(new CustomMedication(m));
+                    }
+                }
+            }
+        }
+        return medicationList;
     }
 }

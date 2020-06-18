@@ -2,7 +2,6 @@ package main;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
