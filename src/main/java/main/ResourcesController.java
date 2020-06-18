@@ -40,7 +40,7 @@ public class ResourcesController implements Initializable {
     private List<TableColumn<CustomObservation, String>> observationColumns = new ArrayList<>();;
     private final List<String> observationFields = new ArrayList<>(Arrays.asList("name", "startDateString", "measure"));
     private List<TableColumn<CustomObservation, String>> medicationRequestColumns = new ArrayList<>();;
-    private final List<String> medicationRequestFields = new ArrayList<>(Arrays.asList("name", "medication", "status", "quantity", "range"));
+    private final List<String> medicationRequestFields = new ArrayList<>(Arrays.asList("name", "status", "quantity"));
 
     public ResourcesController() {
     }
