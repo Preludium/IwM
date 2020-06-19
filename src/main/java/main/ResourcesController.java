@@ -60,6 +60,14 @@ public class ResourcesController implements Initializable {
         medicationRequests = server.getMedicationRequest(bundle);
     }
 
+    private void initializeComboBoxWithTypes(){
+        Set<String> observationTypes = new HashSet<>();
+        observations.forEach(obs -> {
+            observationTypes.add(obs.getName());
+        });
+        comboBoxTypeOfElement.setItems(FXCollections.observableArrayList(observationTypes));
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         resourceComboBox.setItems(FXCollections.observableArrayList("Medication", "MedicationStatement", "Observation", "MedicationRequest"));
@@ -136,6 +144,7 @@ public class ResourcesController implements Initializable {
                     break;
             }
         });
+        initializeComboBoxWithTypes();
         backButton.setOnAction(event -> {
             Stage window = (Stage) backButton.getScene().getWindow();
             window.setScene(patientScene);
