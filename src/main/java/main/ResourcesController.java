@@ -37,11 +37,9 @@ public class ResourcesController implements Initializable {
     @FXML private ComboBox<String> comboBoxTypeOfElement;
     @FXML private DatePicker datePickerFrom;
     @FXML private DatePicker datePickerTo;
-    private final List<String> medicationFields = new ArrayList<>(Arrays.asList("name", "code", "manufacturer", "description"));
-    private final List<String> medicationStatementFields = new ArrayList<>(Arrays.asList("name", "taken", "dosage", "startDateString", "endDateString"));
     private List<TableColumn<CustomObservation, String>> observationColumns = new ArrayList<>();;
     private final List<String> observationFields = new ArrayList<>(Arrays.asList("name", "date", "measure", "note"));
-    private List<TableColumn<CustomObservation, String>> medicationRequestColumns = new ArrayList<>();
+    private List<TableColumn<CustomMedicationRequest, String>> medicationRequestColumns = new ArrayList<>();
     private final List<String> medicationRequestFields = new ArrayList<>(Arrays.asList("medication", "date", "status", "quantity"));
 
     public ResourcesController() {
@@ -87,7 +85,6 @@ public class ResourcesController implements Initializable {
                     tableView.getColumns().setAll(observationColumns);
                     tableView.setItems(FXCollections.observableArrayList(observations));
                     initializeComboBoxWithTypes(true, false);
-                    System.out.println(observations.size());
                     break;
                 case "MedicationRequest":
                     tableView.getColumns().clear();
@@ -95,7 +92,6 @@ public class ResourcesController implements Initializable {
                     tableView.getColumns().setAll(medicationRequestColumns);
                     tableView.setItems(FXCollections.observableArrayList(medicationRequests));
                     initializeComboBoxWithTypes(false, true);
-                    System.out.println(medicationRequests.size());
                     break;
             }
         });
@@ -111,7 +107,7 @@ public class ResourcesController implements Initializable {
                 listToFilter.addAll(allObservations);
             }
             listToFilter.forEach(obs -> {
-                LocalDate startDate = obs.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate startDate = obs.getDateS().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if (dateFrom==null){
                     dateFrom = LocalDate.of(1700, 01, 01);
                 }
@@ -249,17 +245,6 @@ public class ResourcesController implements Initializable {
             }
         });
 
-        /**
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         */
-//        tableView.setItems(FXCollections.observableArrayList(medications));
-
         handleSelectionOfTypeInformationAboutPatient();
         initializeComboBoxWithTypes(false, false);
         backButton.setOnAction(event -> {
@@ -267,6 +252,5 @@ public class ResourcesController implements Initializable {
             window.setScene(patientScene);
         });
     }
-
 
 }

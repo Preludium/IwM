@@ -7,8 +7,8 @@ import java.util.Date;
 
 public class CustomObservation {
     private String name;
-    private Date date;
-    private String dateString;
+    private Date dateS;
+    private String date;
     private String measure;
     private String note;
 
@@ -17,8 +17,8 @@ public class CustomObservation {
             name = o.getCode().getText();
         if (o.hasIssued()) {
             SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-            this.date = o.getIssued();
-            dateString = dt.format(this.date);
+            this.dateS = o.getIssued();
+            this.date = dt.format(this.dateS);
         }
         if (o.hasValueQuantity())
             measure = String.format("%.2f ", o.getValueQuantity().getValue()) + o.getValueQuantity().getUnit();
@@ -30,12 +30,12 @@ public class CustomObservation {
         return name;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateS() {
+        return dateS;
     }
 
-    public String getDateString() {
-        return dateString;
+    public String getDate() {
+        return date;
     }
 
     public String getMeasure() {
