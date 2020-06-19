@@ -114,11 +114,7 @@ public class ResourcesController implements Initializable {
         });
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        resourceComboBox.setItems(FXCollections.observableArrayList("Medication", "MedicationStatement", "Observation", "MedicationRequest"));
-        resourceComboBox.setValue("Medication");
-        patientLabel.setText(patient.getId());
+    private void fillMedicationColumns(){
         for (int i = 0; i < medicationFields.size(); ++i) {
             medicationColumns.add(new TableColumn<>());
             String s1 = medicationFields.get(i).substring(0, 1).toUpperCase();
@@ -127,6 +123,9 @@ public class ResourcesController implements Initializable {
             medicationColumns.get(i).setMinWidth(125);
             medicationColumns.get(i).setCellValueFactory(new PropertyValueFactory<>(medicationFields.get(i)));
         }
+    }
+
+    private void fillMedicationStatmentsColumns(){
         for (int i = 0; i < medicationStatementFields.size(); ++i) {
             medicationStatementColumns.add(new TableColumn<>());
             String s1 = medicationStatementFields.get(i).substring(0, 1).toUpperCase();
@@ -135,6 +134,9 @@ public class ResourcesController implements Initializable {
             medicationStatementColumns.get(i).setMinWidth(125);
             medicationStatementColumns.get(i).setCellValueFactory(new PropertyValueFactory<>(medicationStatementFields.get(i)));
         }
+    }
+
+    private void fillObservationsColumns(){
         for (int i = 0; i < observationFields.size(); ++i) {
             observationColumns.add(new TableColumn<>());
             String s1 = observationFields.get(i).substring(0, 1).toUpperCase();
@@ -143,6 +145,9 @@ public class ResourcesController implements Initializable {
             observationColumns.get(i).setMinWidth(125);
             observationColumns.get(i).setCellValueFactory(new PropertyValueFactory<>(observationFields.get(i)));
         }
+    }
+
+    private void fillMedicationRequestsColumns(){
         for (int i = 0; i < medicationRequestFields.size(); ++i) {
             medicationRequestColumns.add(new TableColumn<>());
             String s1 = medicationRequestFields.get(i).substring(0, 1).toUpperCase();
@@ -151,11 +156,24 @@ public class ResourcesController implements Initializable {
             medicationRequestColumns.get(i).setMinWidth(125);
             medicationRequestColumns.get(i).setCellValueFactory(new PropertyValueFactory<>(medicationRequestFields.get(i)));
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        resourceComboBox.setItems(FXCollections.observableArrayList("Medication", "MedicationStatement", "Observation", "MedicationRequest"));
+        resourceComboBox.setValue("Medication");
+        patientLabel.setText(patient.getId());
+        fillMedicationColumns();
+        fillMedicationStatmentsColumns();
+        fillObservationsColumns();
+        fillMedicationRequestsColumns();
+
         tableView.getColumns().setAll(medicationColumns);
         tableView.widthProperty().addListener((source, oldWidth, newWidth) -> {
             final TableHeaderRow header = (TableHeaderRow) tableView.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((observable, oldValue, newValue) -> header.setReordering(false));
         });
+
         tableView.setItems(FXCollections.observableArrayList(medications));
 
         handleSelectionOfTypeInformationAboutPatient();
