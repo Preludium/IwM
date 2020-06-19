@@ -17,6 +17,7 @@ import org.hl7.fhir.dstu3.model.Bundle;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 // TODO: edit columns names
@@ -131,6 +132,33 @@ public class ResourcesController implements Initializable {
     }
 
     private void filterByDate(){
+        if (resourceComboBox.getSelectionModel().getSelectedItem() == "Observation") {
+            List<CustomObservation> filteredRows = new ArrayList<>();
+            List<CustomObservation> listToFilter = new ArrayList<>();
+            if(observations.size()>0){
+                listToFilter.addAll(observations);
+            }else{
+                listToFilter.addAll(allObservations);
+            }
+            listToFilter.forEach(obs -> {
+                LocalDate startDate = obs.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (dateFrom==null){
+                    dateFrom = LocalDate.of(1700, 01, 01);
+                }
+                if (dateTo==null){
+                    dateTo=LocalDate.now();
+                }
+                if (startDate.isAfter(dateFrom) && startDate.isBefore(dateTo)) {
+                    filteredRows.add(obs);
+                }
+            });
+            observations.clear();
+            observations.addAll(filteredRows);
+            tableView.getColumns().clear();
+            tableView.getItems().clear();
+            tableView.getColumns().setAll(observationColumns);
+            tableView.setItems(FXCollections.observableArrayList(observations));
+        }
 
     }
 
@@ -180,6 +208,8 @@ public class ResourcesController implements Initializable {
 
     @FXML
     public void selectTypeOfElement(){
+        dateFrom=datePickerFrom.getValue();
+        dateTo=datePickerTo.getValue();
         String selectedValue = comboBoxTypeOfElement.getValue();
         try {
             if (resourceComboBox.getSelectionModel().getSelectedItem() == "Observation") {
@@ -219,6 +249,7 @@ public class ResourcesController implements Initializable {
                 tableView.getColumns().setAll(medicationRequestColumns);
                 tableView.setItems(FXCollections.observableArrayList(medicationRequests));
             }
+            filterByDate();
         }catch(Exception e){
 
         }
@@ -239,6 +270,8 @@ public class ResourcesController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        dateFrom=LocalDate.now();
+        dateTo=LocalDate.now();
         resourceComboBox.setItems(FXCollections.observableArrayList("Medication", "MedicationStatement", "Observation", "MedicationRequest"));
         resourceComboBox.setValue("Medication");
         patientLabel.setText(patient.getId());
