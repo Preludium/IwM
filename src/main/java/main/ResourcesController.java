@@ -126,6 +126,34 @@ public class ResourcesController implements Initializable {
             tableView.setItems(FXCollections.observableArrayList(observations));
         }
 
+        if (resourceComboBox.getSelectionModel().getSelectedItem() == "MedicationRequest") {
+            List<CustomMedicationRequest> filteredRows = new ArrayList<>();
+            List<CustomMedicationRequest> listToFilter = new ArrayList<>();
+            if(medicationRequests.size()>0){
+                listToFilter.addAll(medicationRequests);
+            }else{
+                listToFilter.addAll(allMedicationRequests);
+            }
+            listToFilter.forEach(medReq -> {
+                LocalDate startDate = medReq.getDateS().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if (dateFrom==null){
+                    dateFrom = LocalDate.of(1700, 01, 01);
+                }
+                if (dateTo==null){
+                    dateTo=LocalDate.now();
+                }
+                if (startDate.isAfter(dateFrom) && startDate.isBefore(dateTo)) {
+                    filteredRows.add(medReq);
+                }
+            });
+            medicationRequests.clear();
+            medicationRequests.addAll(filteredRows);
+            tableView.getColumns().clear();
+            tableView.getItems().clear();
+            tableView.getColumns().setAll(medicationRequestColumns);
+            tableView.setItems(FXCollections.observableArrayList(medicationRequests));
+        }
+
     }
 
     private void fillObservationsColumns(){
@@ -152,8 +180,6 @@ public class ResourcesController implements Initializable {
 
     @FXML
     public void selectTypeOfElement(){
-//        dateFrom=datePickerFrom.getValue();
-//        dateTo=datePickerTo.getValue();
         dateFrom=LocalDate.of(1970,01,01);
         dateTo=LocalDate.now();
         String selectedValue = comboBoxTypeOfElement.getValue();

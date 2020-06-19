@@ -3,11 +3,13 @@ package main.customs;
 import org.hl7.fhir.dstu3.model.MedicationRequest;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CustomMedicationRequest {
 
     private String medication;
     private String status;
+    private Date dateS;
     private String date;
     private String quantity;
 
@@ -18,7 +20,8 @@ public class CustomMedicationRequest {
             this.status = ms.getStatus().getDisplay();
         if (ms.hasAuthoredOn()) {
             SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-            this.date = dt.format(ms.getAuthoredOn());
+            this.dateS = ms.getAuthoredOn();
+            this.date = dt.format(dateS);
         }
         if (ms.getDosageInstructionFirstRep().hasDoseSimpleQuantity())
             this.quantity = ms.getDosageInstructionFirstRep().getDoseSimpleQuantity().getValue().toString();
@@ -30,6 +33,10 @@ public class CustomMedicationRequest {
 
     public String getDate() {
         return date;
+    }
+
+    public Date getDateS() {
+        return dateS;
     }
 
     public String getStatus() {
