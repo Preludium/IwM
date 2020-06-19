@@ -59,30 +59,6 @@ public class FhirServer {
         return entries;
     }
 
-    public List<CustomMedication> getMedicationss(List<Bundle.BundleEntryComponent> entries){
-        List<CustomMedication> medicationList = new ArrayList<>();
-        for (Bundle.BundleEntryComponent e : entries) {
-            if(e.getResource() instanceof Medication) {
-                Medication m = (Medication)e.getResource();
-                medicationList.add(new CustomMedication(m));
-            }
-        }
-
-        return medicationList;
-    }
-
-    public List<CustomMedicationStatement> getMedicationStatements(List<Bundle.BundleEntryComponent> entries){
-        List<CustomMedicationStatement> medicationStatementList = new ArrayList<>();
-        for (Bundle.BundleEntryComponent e : entries) {
-            if(e.getResource() instanceof MedicationStatement) {
-                MedicationStatement m = (MedicationStatement)e.getResource();
-                medicationStatementList.add(new CustomMedicationStatement(m));
-            }
-        }
-
-        return medicationStatementList;
-    }
-
     public List<CustomObservation> getObservations(List<Bundle.BundleEntryComponent> entries)  {
         List<CustomObservation> observationList = new ArrayList<>();
         for (Bundle.BundleEntryComponent e : entries) {
@@ -115,27 +91,4 @@ public class FhirServer {
         return medicationRequestList;
     }
 
-    public List<CustomMedication> getMedications(List<MedicationRequest> medReqs) {
-        List<CustomMedication> medicationList = new ArrayList<>();
-
-        for(MedicationRequest req : medReqs){
-            if (req.getMedication() instanceof CodeableConcept) {
-                CodeableConcept medicationCodeable = ((CodeableConcept) req.getMedication());
-                String code = medicationCodeable.getCodingFirstRep().getCode();
-                Bundle results = client
-                        .search()
-                        .forResource(Medication.class)
-                        .where(new TokenClientParam("form").exactly().code(code))
-                        .returnBundle(Bundle.class)
-                        .execute();
-                for (Bundle.BundleEntryComponent e : results.getEntry()) {
-                    if(e.getResource() instanceof Medication) {
-                        Medication m = (Medication) e.getResource();
-                        medicationList.add(new CustomMedication(m));
-                    }
-                }
-            }
-        }
-        return medicationList;
-    }
 }

@@ -8,39 +8,36 @@ import java.util.Date;
 
 public class CustomObservation {
     private String name;
-    private Date startDate;
-    private String startDateString;
+    private String date;
     private String measure;
-
+    private String note;
 
     public CustomObservation(Observation o) {
-        try {
+        if (o.hasCode())
             name = o.getCode().getText();
-            startDate = o.getIssued();
-            if (startDate != null) {
-                SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-                startDateString = dt.format(this.startDate);
-            }
-            if (o.hasValueQuantity())
-                measure = String.format("%.2f ", o.getValueQuantity().getValue()) + o.getValueQuantity().getUnit();
+        if (o.hasIssued()) {
+            SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+            date = dt.format(o.getIssued());
         }
-        catch (Exception e) {
-        }
+        if (o.hasValueQuantity())
+            measure = String.format("%.2f ", o.getValueQuantity().getValue()) + o.getValueQuantity().getUnit();
+        if (o.hasComment())
+            this.note = o.getComment();
     }
 
     public String getName() {
         return name;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public String getStartDateString() {
-        return startDateString;
+    public String getDate() {
+        return date;
     }
 
     public String getMeasure() {
         return measure;
+    }
+
+    public String getNote() {
+        return note;
     }
 }

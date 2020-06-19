@@ -16,29 +16,21 @@ import java.net.URL;
 import java.util.*;
 
 
-// TODO: edit columns names
-
 public class ResourcesController implements Initializable {
     private Scene patientScene;
     private FhirServer server;
     private CustomPatient patient;
     private List<CustomObservation> observations;
-    private List<CustomMedication> medications;
-    private List<CustomMedicationStatement> medicationStatements;
     private List<CustomMedicationRequest> medicationRequests;
 
     @FXML private TableView tableView = new TableView<>();
     @FXML private Label patientLabel;
     @FXML private Button backButton;
     @FXML private ComboBox<String> resourceComboBox;
-//    private List<TableColumn<CustomMedication, String>> medicationColumns = new ArrayList<>();;
-//    private final List<String> medicationFields = new ArrayList<>(Arrays.asList("name", "code", "manufacturer", "description"));
-//    private List<TableColumn<CustomMedicationStatement, String>> medicationStatementColumns = new ArrayList<>();
-//    private final List<String> medicationStatementFields = new ArrayList<>(Arrays.asList("name", "taken", "dosage", "startDateString", "endDateString"));
     private List<TableColumn<CustomObservation, String>> observationColumns = new ArrayList<>();;
-    private final List<String> observationFields = new ArrayList<>(Arrays.asList("name", "startDateString", "measure"));
-    private List<TableColumn<CustomObservation, String>> medicationRequestColumns = new ArrayList<>();;
-    private final List<String> medicationRequestFields = new ArrayList<>(Arrays.asList("name", "status", "quantity"));
+    private final List<String> observationFields = new ArrayList<>(Arrays.asList("name", "date", "measure", "note"));
+    private List<TableColumn<CustomObservation, String>> medicationRequestColumns = new ArrayList<>();
+    private final List<String> medicationRequestFields = new ArrayList<>(Arrays.asList("medication", "date", "status", "quantity"));
 
     public ResourcesController() {
     }
@@ -49,11 +41,9 @@ public class ResourcesController implements Initializable {
         this.server = server;
 
         List<Bundle.BundleEntryComponent> bundle = server.getEverything(this.patient.getId());
-        medicationStatements = server.getMedicationStatements(bundle);
         observations = server.getObservations(bundle);
         List<MedicationRequest> reqs = server.getMedicationRequest(bundle);
         medicationRequests = server.getCustomMedicationRequest(reqs);
-        medications = server.getMedications(reqs);
     }
 
     @Override
@@ -61,22 +51,6 @@ public class ResourcesController implements Initializable {
         resourceComboBox.setItems(FXCollections.observableArrayList("MedicationRequest", "Observation"));
         resourceComboBox.setValue("MedicationRequest");
         patientLabel.setText(patient.getId());
-//        for (int i = 0; i < medicationFields.size(); ++i) {
-//            medicationColumns.add(new TableColumn<>());
-//            String s1 = medicationFields.get(i).substring(0, 1).toUpperCase();
-//            String nameCapitalized = s1 + medicationFields.get(i).substring(1);
-//            medicationColumns.get(i).setText(nameCapitalized);
-//            medicationColumns.get(i).setMinWidth(125);
-//            medicationColumns.get(i).setCellValueFactory(new PropertyValueFactory<>(medicationFields.get(i)));
-//        }
-//        for (int i = 0; i < medicationStatementFields.size(); ++i) {
-//            medicationStatementColumns.add(new TableColumn<>());
-//            String s1 = medicationStatementFields.get(i).substring(0, 1).toUpperCase();
-//            String nameCapitalized = s1 + medicationStatementFields.get(i).substring(1);
-//            medicationStatementColumns.get(i).setText(nameCapitalized);
-//            medicationStatementColumns.get(i).setMinWidth(125);
-//            medicationStatementColumns.get(i).setCellValueFactory(new PropertyValueFactory<>(medicationStatementFields.get(i)));
-//        }
         for (int i = 0; i < observationFields.size(); ++i) {
             observationColumns.add(new TableColumn<>());
             String s1 = observationFields.get(i).substring(0, 1).toUpperCase();
@@ -102,18 +76,6 @@ public class ResourcesController implements Initializable {
 
         resourceComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             switch(newValue) {
-//                case "Medication":
-//                    tableView.getColumns().clear();
-//                    tableView.getItems().clear();
-//                    tableView.getColumns().setAll(medicationColumns);
-//                    tableView.setItems(FXCollections.observableArrayList(medications));
-//                    break;
-//                case "MedicationStatement":
-//                    tableView.getColumns().clear();
-//                    tableView.getItems().clear();
-//                    tableView.getColumns().setAll(medicationStatementColumns);
-//                    tableView.setItems(FXCollections.observableArrayList(medicationStatements));
-//                    break;
                 case "Observation":
                     tableView.getColumns().clear();
                     tableView.getItems().clear();

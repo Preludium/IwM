@@ -22,20 +22,19 @@ public class CustomPatient {
     }
 
     public CustomPatient(Bundle.BundleEntryComponent p) {
-        try {
-            Patient patient = (Patient) p.getResource();
-            List<String> urlList = Arrays.asList(p.getFullUrl().split("/"));
-            this.id = urlList.get(urlList.size() - 1);
-            this.firstName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getGivenAsSingleString();
-            this.lastName = patient.getName().isEmpty() ? "" : patient.getName().get(0).getFamily();
-            this.gender = patient.getGender() != null ? patient.getGender().getDisplay() : "";
-            if (patient.getBirthDate() != null) {
-                this.birthDate = patient.getBirthDate();
-                SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
-                this.birthDateString = dt.format(patient.getBirthDate());
-            }
+        Patient patient = (Patient) p.getResource();
+        List<String> urlList = Arrays.asList(p.getFullUrl().split("/"));
+        this.id = urlList.get(urlList.size() - 1);
+        if (patient.hasName()) {
+            this.firstName = patient.getName().get(0).getGivenAsSingleString();
+            this.lastName = patient.getName().get(0).getFamily();
         }
-        catch (Exception e) {
+        if (patient.hasGender())
+            this.gender = patient.getGender().getDisplay();
+        if (patient.hasBirthDate()) {
+            this.birthDate = patient.getBirthDate();
+            SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
+            this.birthDateString = dt.format(patient.getBirthDate());
         }
     }
 
@@ -43,47 +42,24 @@ public class CustomPatient {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Date getBirthDate() {
         return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
     }
 
     public String getBirthDateString() {
         return birthDateString;
     }
 
-    public void setBirthDateString(String birthDateString) {
-        this.birthDateString = birthDateString;
-    }
-
     public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
 }
