@@ -2,7 +2,6 @@ package main;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +14,7 @@ import main.customs.CustomPatient;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -29,17 +29,39 @@ public class PatientsController implements Initializable {
     @FXML TableColumn<CustomPatient, String> birthColumn;
     @FXML TableColumn<CustomPatient, String> genderColumn;
     private final FhirServer server;
+    private final List<CustomPatient> allPatientList;
     private final List<CustomPatient> patientList;
 
 
     public PatientsController() {
         server = new FhirServer();
+        allPatientList = server.getPatients();
         patientList = server.getPatients();
+    }
+
+    @FXML
+    public void onSearch(){
+        String searchText = searchField.getText();
+        List<CustomPatient> filteredPatients = new ArrayList<>();
+        allPatientList.forEach(patient -> {
+            if (patient.getFirstName().toUpperCase().contains(searchText.toUpperCase()) ||
+            patient.getLastName().toUpperCase().contains(searchText.toUpperCase())){
+               filteredPatients.add(patient);
+            }
+        });
+        patientList.clear();
+        patientList.addAll(filteredPatients);
+        setPatientsInView();
+
     }
 
     @Override
     public void initialize(URL location, final ResourceBundle resources) {
         setUpTableView();
+        setPatientsInView();
+    }
+
+    private void setPatientsInView(){
         tableView.setItems(FXCollections.observableArrayList(patientList));
         tableView.setRowFactory(tv -> {
             final TableRow<CustomPatient> row = new TableRow<>();

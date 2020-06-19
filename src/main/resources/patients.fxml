@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1"
-      xmlns="http://javafx.com/javafx/10.0.2-internal"
-      fx:controller="main.PatientsController"
->
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.PatientsController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
@@ -15,9 +16,9 @@
         <padding>
             <Insets bottom="10" top="25" />
         </padding>
-        <TextField fx:id="searchField" prefHeight="25.0" prefWidth="150.0" promptText="Search..." />
+        <TextField fx:id="searchField" onKeyReleased="#onSearch" prefHeight="25.0" prefWidth="150.0" promptText="Search..." />
     </HBox>
-    <TableView VBox.vgrow="ALWAYS" fx:id="tableView">
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
       <columns>
          <TableColumn fx:id="idColumn" minWidth="125.0" text="ID" />
          <TableColumn fx:id="firstNameColumn" minWidth="125.0" text="First Name" />
