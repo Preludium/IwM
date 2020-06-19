@@ -152,8 +152,10 @@ public class ResourcesController implements Initializable {
 
     @FXML
     public void selectTypeOfElement(){
-        dateFrom=datePickerFrom.getValue();
-        dateTo=datePickerTo.getValue();
+//        dateFrom=datePickerFrom.getValue();
+//        dateTo=datePickerTo.getValue();
+        dateFrom=LocalDate.of(1970,01,01);
+        dateTo=LocalDate.now();
         String selectedValue = comboBoxTypeOfElement.getValue();
         try {
             if (resourceComboBox.getSelectionModel().getSelectedItem() == "Observation") {
