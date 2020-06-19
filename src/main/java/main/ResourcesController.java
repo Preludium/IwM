@@ -60,12 +60,58 @@ public class ResourcesController implements Initializable {
         medicationRequests = server.getMedicationRequest(bundle);
     }
 
-    private void initializeComboBoxWithTypes(){
+    private void initializeComboBoxWithTypes(boolean withObservations, boolean withMedicalRequests){
         Set<String> observationTypes = new HashSet<>();
-        observations.forEach(obs -> {
-            observationTypes.add(obs.getName());
-        });
+        if (withObservations){
+            observations.forEach(obs -> {
+                observationTypes.add(obs.getName());
+            });
+        }
+        if (withMedicalRequests){
+            medicationRequests.forEach(med -> {
+                observationTypes.add(med.getName());
+            });
+        }
         comboBoxTypeOfElement.setItems(FXCollections.observableArrayList(observationTypes));
+    }
+
+    private void handleSelectionOfTypeInformationAboutPatient(){
+        resourceComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switch(newValue) {
+                case "Medication":
+                    tableView.getColumns().clear();
+                    tableView.getItems().clear();
+                    tableView.getColumns().setAll(medicationColumns);
+                    tableView.setItems(FXCollections.observableArrayList(medications));
+                    initializeComboBoxWithTypes(false, false);
+                    System.out.println(medications.size());
+                    break;
+                case "MedicationStatement":
+                    tableView.getColumns().clear();
+                    tableView.getItems().clear();
+                    tableView.getColumns().setAll(medicationStatementColumns);
+                    tableView.setItems(FXCollections.observableArrayList(medicationStatements));
+                    initializeComboBoxWithTypes(false, false);
+                    System.out.println(medicationStatements.size());
+                    break;
+                case "Observation":
+                    tableView.getColumns().clear();
+                    tableView.getItems().clear();
+                    tableView.getColumns().setAll(observationColumns);
+                    tableView.setItems(FXCollections.observableArrayList(observations));
+                    initializeComboBoxWithTypes(true, false);
+                    System.out.println(observations.size());
+                    break;
+                case "MedicationRequest":
+                    tableView.getColumns().clear();
+                    tableView.getItems().clear();
+                    tableView.getColumns().setAll(medicationRequestColumns);
+                    tableView.setItems(FXCollections.observableArrayList(medicationRequests));
+                    initializeComboBoxWithTypes(false, true);
+                    System.out.println(medicationRequests.size());
+                    break;
+            }
+        });
     }
 
     @Override
@@ -112,39 +158,8 @@ public class ResourcesController implements Initializable {
         });
         tableView.setItems(FXCollections.observableArrayList(medications));
 
-        resourceComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            switch(newValue) {
-                case "Medication":
-                    tableView.getColumns().clear();
-                    tableView.getItems().clear();
-                    tableView.getColumns().setAll(medicationColumns);
-                    tableView.setItems(FXCollections.observableArrayList(medications));
-                    System.out.println(medications.size());
-                    break;
-                case "MedicationStatement":
-                    tableView.getColumns().clear();
-                    tableView.getItems().clear();
-                    tableView.getColumns().setAll(medicationStatementColumns);
-                    tableView.setItems(FXCollections.observableArrayList(medicationStatements));
-                    System.out.println(medicationStatements.size());
-                    break;
-                case "Observation":
-                    tableView.getColumns().clear();
-                    tableView.getItems().clear();
-                    tableView.getColumns().setAll(observationColumns);
-                    tableView.setItems(FXCollections.observableArrayList(observations));
-                    System.out.println(observations.size());
-                    break;
-                case "MedicationRequest":
-                    tableView.getColumns().clear();
-                    tableView.getItems().clear();
-                    tableView.getColumns().setAll(medicationRequestColumns);
-                    tableView.setItems(FXCollections.observableArrayList(medicationRequests));
-                    System.out.println(medicationRequests.size());
-                    break;
-            }
-        });
-        initializeComboBoxWithTypes();
+        handleSelectionOfTypeInformationAboutPatient();
+        initializeComboBoxWithTypes(false, false);
         backButton.setOnAction(event -> {
             Stage window = (Stage) backButton.getScene().getWindow();
             window.setScene(patientScene);
