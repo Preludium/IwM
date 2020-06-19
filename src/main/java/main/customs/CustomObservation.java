@@ -1,14 +1,14 @@
 package main.customs;
 
 import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.exceptions.FHIRException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CustomObservation {
     private String name;
-    private String date;
+    private Date date;
+    private String dateString;
     private String measure;
     private String note;
 
@@ -17,7 +17,8 @@ public class CustomObservation {
             name = o.getCode().getText();
         if (o.hasIssued()) {
             SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-            date = dt.format(o.getIssued());
+            this.date = o.getIssued();
+            dateString = dt.format(this.date);
         }
         if (o.hasValueQuantity())
             measure = String.format("%.2f ", o.getValueQuantity().getValue()) + o.getValueQuantity().getUnit();
@@ -29,8 +30,12 @@ public class CustomObservation {
         return name;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
+    }
+
+    public String getDateString() {
+        return dateString;
     }
 
     public String getMeasure() {
