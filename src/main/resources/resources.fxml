@@ -27,8 +27,8 @@
         </Label>
 <!--        <DatePicker/>-->
         <ComboBox fx:id="resourceComboBox" promptText="Resource" GridPane.columnIndex="5" />
-      <DatePicker fx:id="datePickerFrom" GridPane.columnIndex="2" />
-      <DatePicker fx:id="datePickerTo" GridPane.columnIndex="3" />
+      <DatePicker fx:id="datePickerFrom" onAction="#changeDateFrom" GridPane.columnIndex="2" />
+      <DatePicker fx:id="datePickerTo" onAction="#changeDateTo" GridPane.columnIndex="3" />
       <ComboBox fx:id="comboBoxTypeOfElement" onAction="#selectTypeOfElement" prefWidth="150.0" GridPane.columnIndex="4" />
       <columnConstraints>
          <ColumnConstraints />

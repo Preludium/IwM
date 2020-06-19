@@ -16,6 +16,7 @@ import main.customs.*;
 import org.hl7.fhir.dstu3.model.Bundle;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 // TODO: edit columns names
@@ -32,6 +33,9 @@ public class ResourcesController implements Initializable {
     private List<CustomMedicationStatement> medicationStatements;
     private List<CustomMedicationRequest> allMedicationRequests;
     private List<CustomMedicationRequest> medicationRequests;
+
+    private LocalDate dateFrom;
+    private LocalDate dateTo;
 
     @FXML private TableView tableView = new TableView<>();
     @FXML private Label patientLabel;
@@ -126,6 +130,10 @@ public class ResourcesController implements Initializable {
         });
     }
 
+    private void filterByDate(){
+
+    }
+
     private void fillMedicationColumns(){
         for (int i = 0; i < medicationFields.size(); ++i) {
             medicationColumns.add(new TableColumn<>());
@@ -173,7 +181,6 @@ public class ResourcesController implements Initializable {
     @FXML
     public void selectTypeOfElement(){
         String selectedValue = comboBoxTypeOfElement.getValue();
-//        System.out.println(selectedValue == "---");
         try {
             if (resourceComboBox.getSelectionModel().getSelectedItem() == "Observation") {
                 List<CustomObservation> filteredRows = new ArrayList<>();
@@ -216,6 +223,18 @@ public class ResourcesController implements Initializable {
 
         }
 
+    }
+
+    @FXML
+    public void changeDateFrom(){
+        this.dateFrom = datePickerFrom.getValue();
+        filterByDate();
+    }
+
+    @FXML
+    public void changeDateTo(){
+        this.dateTo = datePickerTo.getValue();
+        filterByDate();
     }
 
     @Override
