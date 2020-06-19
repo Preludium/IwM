@@ -24,9 +24,13 @@ public class ResourcesController implements Initializable {
     private Scene patientScene;
     private FhirServer server;
     private CustomPatient patient;
+    private List<CustomObservation> allObservations;
     private List<CustomObservation> observations;
+    private List<CustomMedication> allMedications;
     private List<CustomMedication> medications;
+    private List<CustomMedicationStatement> allMedicationStatements;
     private List<CustomMedicationStatement> medicationStatements;
+    private List<CustomMedicationRequest> allMedicationRequests;
     private List<CustomMedicationRequest> medicationRequests;
 
     @FXML private TableView tableView = new TableView<>();
@@ -54,14 +58,20 @@ public class ResourcesController implements Initializable {
         this.server = server;
 
         List<Bundle.BundleEntryComponent> bundle = server.getEverything(this.patient.getId());
-        medications = server.getMedications(bundle);
-        medicationStatements = server.getMedicationStatements(bundle);
-        observations = server.getObservations(bundle);
-        medicationRequests = server.getMedicationRequest(bundle);
+        allMedications = server.getMedications(bundle);
+        allMedicationStatements = server.getMedicationStatements(bundle);
+        allObservations = server.getObservations(bundle);
+        allMedicationRequests = server.getMedicationRequest(bundle);
+
+        medications = new ArrayList<>(allMedications);
+        medicationStatements = new ArrayList<>(allMedicationStatements);
+        observations = new ArrayList<>(allObservations);
+        medicationRequests = new ArrayList<>(allMedicationRequests);
     }
 
     private void initializeComboBoxWithTypes(boolean withObservations, boolean withMedicalRequests){
         Set<String> observationTypes = new HashSet<>();
+        observationTypes.add("---");
         if (withObservations){
             observations.forEach(obs -> {
                 observationTypes.add(obs.getName());
@@ -73,6 +83,8 @@ public class ResourcesController implements Initializable {
             });
         }
         comboBoxTypeOfElement.setItems(FXCollections.observableArrayList(observationTypes));
+
+        comboBoxTypeOfElement.getSelectionModel().select("---");
     }
 
     private void handleSelectionOfTypeInformationAboutPatient(){
@@ -156,6 +168,54 @@ public class ResourcesController implements Initializable {
             medicationRequestColumns.get(i).setMinWidth(125);
             medicationRequestColumns.get(i).setCellValueFactory(new PropertyValueFactory<>(medicationRequestFields.get(i)));
         }
+    }
+
+    @FXML
+    public void selectTypeOfElement(){
+        String selectedValue = comboBoxTypeOfElement.getValue();
+//        System.out.println(selectedValue == "---");
+        try {
+            if (resourceComboBox.getSelectionModel().getSelectedItem() == "Observation") {
+                List<CustomObservation> filteredRows = new ArrayList<>();
+                if (selectedValue.compareTo("---") == 0) {
+                    filteredRows.addAll(allObservations);
+                } else {
+                    allObservations.forEach(obs -> {
+                        if (obs.getName().compareTo(selectedValue) == 0) {
+                            filteredRows.add(obs);
+                        }
+                    });
+                }
+                observations.clear();
+                observations.addAll(filteredRows);
+                tableView.getColumns().clear();
+                tableView.getItems().clear();
+                tableView.getColumns().setAll(observationColumns);
+                tableView.setItems(FXCollections.observableArrayList(observations));
+            }
+
+            if (resourceComboBox.getSelectionModel().getSelectedItem() == "MedicationRequest") {
+                List<CustomMedicationRequest> filteredRows = new ArrayList<>();
+                if (selectedValue.compareTo("---") == 0) {
+                    filteredRows.addAll(allMedicationRequests);
+                } else {
+                    allMedicationRequests.forEach(obs -> {
+                        if (obs.getName().compareTo(selectedValue) == 0) {
+                            filteredRows.add(obs);
+                        }
+                    });
+                }
+                medicationRequests.clear();
+                medicationRequests.addAll(filteredRows);
+                tableView.getColumns().clear();
+                tableView.getItems().clear();
+                tableView.getColumns().setAll(medicationRequestColumns);
+                tableView.setItems(FXCollections.observableArrayList(medicationRequests));
+            }
+        }catch(Exception e){
+
+        }
+
     }
 
     @Override
