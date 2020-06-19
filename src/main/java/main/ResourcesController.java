@@ -33,6 +33,9 @@ public class ResourcesController implements Initializable {
     @FXML private Label patientLabel;
     @FXML private Button backButton;
     @FXML private ComboBox<String> resourceComboBox;
+    @FXML private ComboBox<String> comboBoxTypeOfElement;
+    @FXML private DatePicker datePickerFrom;
+    @FXML private DatePicker datePickerTo;
     private List<TableColumn<CustomMedication, String>> medicationColumns = new ArrayList<>();;
     private final List<String> medicationFields = new ArrayList<>(Arrays.asList("name", "code", "manufacturer", "description"));
     private List<TableColumn<CustomMedicationStatement, String>> medicationStatementColumns = new ArrayList<>();

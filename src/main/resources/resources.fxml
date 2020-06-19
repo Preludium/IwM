@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1"
-      xmlns="http://javafx.com/javafx/10.0.2-internal"
->
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
@@ -14,26 +19,30 @@
         <padding>
             <Insets bottom="10" top="25" />
         </padding>
-        <Button fx:id="backButton"
-                GridPane.columnIndex="0"
-                GridPane.hgrow="ALWAYS"
-                mnemonicParsing="false"
-                text="Back" />
-        <Label GridPane.columnIndex="1" text="PATIENT"
-               fx:id="patientLabel"
-        >
+        <Button fx:id="backButton" mnemonicParsing="false" text="Back" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" />
+        <Label fx:id="patientLabel" text="PATIENT" GridPane.columnIndex="1">
         <GridPane.margin>
-            <Insets right="60"/>
+            <Insets right="60" />
         </GridPane.margin>
         </Label>
 <!--        <DatePicker/>-->
-        <ComboBox fx:id="resourceComboBox"
-                  GridPane.columnIndex="2"
-                  promptText="Resource"
-        />
+        <ComboBox fx:id="resourceComboBox" promptText="Resource" GridPane.columnIndex="5" />
+      <DatePicker fx:id="datePickerFrom" GridPane.columnIndex="2" />
+      <DatePicker fx:id="datePickerTo" GridPane.columnIndex="3" />
+      <ComboBox fx:id="comboBoxTypeOfElement" prefWidth="150.0" GridPane.columnIndex="4" />
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+      </rowConstraints>
 
     </GridPane>
-    <TableView fx:id="tableView"
-            VBox.vgrow="ALWAYS">
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
     </TableView>
 </VBox>
