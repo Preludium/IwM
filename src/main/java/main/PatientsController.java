@@ -93,7 +93,7 @@ public class PatientsController implements Initializable {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader().getResource("resources.fxml")));
             loader.setController(new ResourcesController(patient, patientScene, server));
             Parent root = loader.load();
-            window.setScene(new Scene(root, 700, 500));
+            window.setScene(new Scene(root, 800, 500));
             window.show();
         } catch (IOException e) {
             e.printStackTrace();

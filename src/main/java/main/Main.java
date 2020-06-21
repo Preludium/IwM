@@ -15,8 +15,9 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader().getResource("patients.fxml")));
         Parent root = loader.load();
         primaryStage.setTitle("Karta Pacjenta");
-        primaryStage.setScene(new Scene(root, 700, 500));
-        primaryStage.setMinWidth(700);
+        primaryStage.setScene(new Scene(root, 800, 500));
+        primaryStage.setMinWidth(800);
+//        primaryStage.setMaxWidth(800);
         primaryStage.setMinHeight(500);
         primaryStage.show();
     }
