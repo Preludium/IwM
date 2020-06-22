@@ -19,7 +19,7 @@ public class CustomMedicationRequest {
         if (ms.hasStatus())
             this.status = ms.getStatus().getDisplay();
         if (ms.hasAuthoredOn()) {
-            SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             this.dateS = ms.getAuthoredOn();
             this.date = dt.format(dateS);
         }

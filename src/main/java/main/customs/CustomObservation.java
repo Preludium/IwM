@@ -16,7 +16,7 @@ public class CustomObservation {
         if (o.hasCode())
             name = o.getCode().getText();
         if (o.hasIssued()) {
-            SimpleDateFormat dt = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             this.dateS = o.getIssued();
             this.date = dt.format(this.dateS);
         }

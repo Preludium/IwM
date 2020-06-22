@@ -33,7 +33,7 @@ public class CustomPatient {
             this.gender = patient.getGender().getDisplay();
         if (patient.hasBirthDate()) {
             this.birthDate = patient.getBirthDate();
-            SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
             this.birthDateString = dt.format(patient.getBirthDate());
         }
     }

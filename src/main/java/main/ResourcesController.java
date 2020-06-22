@@ -64,12 +64,14 @@ public class ResourcesController implements Initializable {
         observationTypes.add("---");
         if (withObservations) {
             observations.forEach(obs -> {
-                observationTypes.add(obs.getName());
+                if (!observationTypes.contains(obs.getName()))
+                    observationTypes.add(obs.getName());
             });
         }
         if (withMedicalRequests) {
             medicationRequests.forEach(med -> {
-                observationTypes.add(med.getMedication());
+                if (!observationTypes.contains(med.getMedication()))
+                    observationTypes.add(med.getMedication());
             });
         }
         comboBoxTypeOfElement.setItems(FXCollections.observableArrayList(observationTypes));
@@ -103,7 +105,7 @@ public class ResourcesController implements Initializable {
             List<CustomObservation> listToFilter = new ArrayList<>();
             if(observations.size() > 0){
                 listToFilter.addAll(observations);
-            }else{
+            } else {
                 listToFilter.addAll(allObservations);
             }
             listToFilter.forEach(obs -> {
@@ -128,7 +130,12 @@ public class ResourcesController implements Initializable {
 
         if (resourceComboBox.getSelectionModel().getSelectedItem().equals("MedicationRequest")) {
             List<CustomMedicationRequest> filteredRows = new ArrayList<>();
-            List<CustomMedicationRequest> listToFilter = new ArrayList<>(allMedicationRequests);
+            List<CustomMedicationRequest> listToFilter = new ArrayList<>();
+            if(medicationRequests.size() > 0){
+                listToFilter.addAll(medicationRequests);
+            } else {
+                listToFilter.addAll(allMedicationRequests);
+            }
             listToFilter.forEach(medReq -> {
                 LocalDate startDate = medReq.getDateS().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if (dateFrom == null) {
@@ -201,9 +208,9 @@ public class ResourcesController implements Initializable {
                 if (selectedValue.equals("---")) {
                     filteredRows.addAll(allMedicationRequests);
                 } else {
-                    allMedicationRequests.forEach(obs -> {
-                        if (obs.getMedication().equals(selectedValue)) {
-                            filteredRows.add(obs);
+                    allMedicationRequests.forEach(req -> {
+                        if (req.getMedication().equals(selectedValue)) {
+                            filteredRows.add(req);
                         }
                     });
                 }
@@ -264,7 +271,6 @@ public class ResourcesController implements Initializable {
             filterByDate();
         });
         comboBoxTypeOfElement.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue == null ? "KUPA leci null" : newValue);
             selectTypeOfElement(newValue);
         });
         backButton.setOnAction(event -> {
