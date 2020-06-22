@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="IwM">
+    <output-path>$PROJECT_DIR$/out/artifacts/IwM</output-path>
+    <root id="root">
+      <element id="archive" name="IwM.jar">
+        <element id="module-output" name="IwM" />
+      </element>
+    </root>
+  </artifact>
+</component>
